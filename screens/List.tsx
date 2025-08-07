@@ -1,15 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function App() {
+export default function List() {
   return (
     <View>
-    <View style={[styles.header]}>
-      <Text>a</Text>
-    </View>
-    <View>
-      
-    </View>
+      <View style={[styles.header]}>
+        <Text>a</Text>
+      </View>
+      <View></View>
     </View>
   );
 }
