@@ -1,7 +1,7 @@
-import { StatusBar } from "expo-status-bar";
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function List() {
+const List: React.FC = () => {
   return (
     <View>
       <View style={[styles.header]}>
@@ -10,7 +10,7 @@ export default function List() {
       <View></View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -24,3 +24,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default List;
