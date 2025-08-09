@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 const List: React.FC = () => {
   return (
     <View>
-      <View style={[styles.header]}>
+      <View>
         <Text>a</Text>
       </View>
       <View></View>
@@ -14,12 +14,6 @@ const List: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  header: {
-    backgroundColor: "red",
-    height: 90,
     alignItems: "center",
     justifyContent: "center",
   },
