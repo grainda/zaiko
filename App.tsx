@@ -30,8 +30,8 @@ const App: React.FC = () => {
           tabBarShowLabel: false,
         })}
       >
-        <Tab.Screen name="List" component={List} />
         <Tab.Screen name="Store" component={Store} />
+        <Tab.Screen name="List" component={List} />
       </Tab.Navigator>
     </NavigationContainer>
   );
