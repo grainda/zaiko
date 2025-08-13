@@ -9,6 +9,7 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const icons = [
   { id: "1", source: require("../assets/png/001-soap.png") },
   { id: "2", source: require("../assets/png/002-vegetables.png") },
@@ -21,6 +22,9 @@ const icons = [
   { id: "9", source: require("../assets/png/009-snacks.png") },
 ];
 
+interface Item {
+  id: number;
+}
 const Store: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(null);
@@ -29,8 +33,16 @@ const Store: React.FC = () => {
   const [itemNumber, setItemNumber] = useState(0);
   const addNumber = () => {
     setItemNumber(itemNumber + 1);
+    return itemNumber;
   };
-
+  const subNumber = () => {
+    if (itemNumber == 0) {
+      return;
+    } else {
+      setItemNumber(itemNumber - 1);
+    }
+    return itemNumber;
+  };
   const renderIcon = ({ item }) => (
     <TouchableOpacity onPress={() => setSelectedIcon(item.source)}>
       <Image
@@ -42,6 +54,41 @@ const Store: React.FC = () => {
       />
     </TouchableOpacity>
   );
+  const reset = () => {
+    setModalVisible(false);
+    setSelectedIcon(null);
+    setItemName("");
+    setItemPlace("");
+    setItemNumber(0);
+  };
+  const saveItem = async () => {
+    try {
+      const newItem = {
+        id: Date.now().toString(),
+        icon: selectedIcon,
+        name: itemName,
+        place: itemPlace,
+        number: itemNumber,
+      };
+
+      const storedItems = await AsyncStorage.getItem("items");
+      const items = storedItems ? JSON.parse(storedItems) : [];
+
+      items.push(newItem);
+
+      await AsyncStorage.setItem("items", JSON.stringify(items));
+
+      setModalVisible(false);
+      setSelectedIcon(null);
+      setItemName("");
+      setItemPlace("");
+      setItemNumber(0);
+
+      console.log("保存成功:", newItem);
+    } catch (error) {
+      console.error("保存エラー:", error);
+    }
+  };
   return (
     <View style={[styles.container]}>
       <View>
@@ -55,6 +102,7 @@ const Store: React.FC = () => {
           <Text style={[styles.addButtonText]}>+</Text>
         </TouchableOpacity>
       </View>
+
       <Modal
         visible={modalVisible}
         animationType="slide"
@@ -63,14 +111,16 @@ const Store: React.FC = () => {
       >
         <View style={[styles.modalOverlay]}>
           <View style={[styles.modalHeader]}>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
+            <TouchableOpacity onPress={() => reset()}>
               <Text style={[styles.modalHeaderText]}>戻る</Text>
             </TouchableOpacity>
             <Text style={[styles.modalTitle, styles.modalHeaderText]}>
               商品の追加
             </Text>
             <TouchableOpacity>
-              <Text style={[styles.modalHeaderText]}>保存</Text>
+              <Text style={[styles.modalHeaderText]} onPress={() => saveItem()}>
+                保存
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={[styles.modalContainer]}>
@@ -93,8 +143,8 @@ const Store: React.FC = () => {
                 placeholderTextColor="#999"
               />
             </View>
-            <View style={[styles.modalItem]}>
-              <Text style={[styles.modalText]}>商品名</Text>
+            <View style={styles.modalItem}>
+              <Text style={styles.modalText}>商品名</Text>
               <TextInput
                 style={styles.input}
                 value={itemName}
@@ -104,10 +154,16 @@ const Store: React.FC = () => {
               />
             </View>
             <View style={styles.modalItem}>
-              <Text style={[styles.modalText]}>在庫</Text>
-              <TouchableOpacity onPress={() => addNumber()}>+</TouchableOpacity>
-              <TouchableOpacity onPress={() => subNimber()}>-</TouchableOpacity>
-              <Text>{itemNumber}</Text>
+              <Text style={styles.modalText}>在庫</Text>
+              <View style={styles.ItemNumBox}>
+                <TouchableOpacity onPress={() => addNumber()}>
+                  <Text>+</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => subNumber()}>
+                  <Text>-</Text>
+                </TouchableOpacity>
+                <Text>{itemNumber}</Text>
+              </View>
             </View>
           </View>
           <View></View>
@@ -155,6 +211,10 @@ const styles = StyleSheet.create({
   modalHeaderText: {
     paddingTop: 35,
     color: "white",
+  },
+  ItemNumBox: {
+    paddingTop: 20,
+    flexDirection: "row",
   },
   modalTitle: {
     fontSize: 25,
