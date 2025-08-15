@@ -22,9 +22,6 @@ const icons = [
   { id: "9", source: require("../assets/png/009-snacks.png") },
 ];
 
-interface Item {
-  id: number;
-}
 const Store: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(null);
@@ -156,13 +153,23 @@ const Store: React.FC = () => {
             <View style={styles.modalItem}>
               <Text style={styles.modalText}>在庫</Text>
               <View style={styles.ItemNumBox}>
-                <TouchableOpacity onPress={() => addNumber()}>
-                  <Text>+</Text>
+                <TouchableOpacity
+                  onPress={() => addNumber()}
+                  style={styles.addSubButton}
+                >
+                  <Text style={styles.addSubButtonText}>+</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => subNumber()}>
-                  <Text>-</Text>
+                <TouchableOpacity
+                  onPress={() => subNumber()}
+                  style={styles.addSubButton}
+                >
+                  <Text style={styles.addSubButtonText}>-</Text>
                 </TouchableOpacity>
-                <Text>{itemNumber}</Text>
+                {itemNumber != 0 ? (
+                  <Text style={styles.modalText}>{itemNumber}</Text>
+                ) : (
+                  <Text style={styles.modalText}>なし</Text>
+                )}
               </View>
             </View>
           </View>
@@ -216,6 +223,18 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     flexDirection: "row",
   },
+  addSubButton: {
+    width: 25,
+    height: 25,
+    backgroundColor: "#1DA1F2",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 20,
+    borderRadius: 5,
+  },
+  addSubButtonText: {
+    color: "white",
+  },
   modalTitle: {
     fontSize: 25,
   },
@@ -230,16 +249,25 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   input: {
-    paddingTop: 20,
+    width: 200,
+    height: 30,
+    paddingTop: 30,
+    borderBottomWidth: 1,
+    borderColor: "rgba(0,0,0,0.3)",
+    borderRadius: 1,
+    paddingBottom: 15,
   },
   icon: {
     height: 80,
     width: 80,
   },
   selectedIcon: {
-    backgroundColor: "#1DA1F2",
+    borderWidth: 2,
+    borderRadius: 10,
   },
-  iconList: {},
+  iconList: {
+    paddingTop: 30,
+  },
 });
 
 export default Store;
