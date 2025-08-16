@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -74,18 +74,28 @@ const Store: React.FC = () => {
       items.push(newItem);
 
       await AsyncStorage.setItem("items", JSON.stringify(items));
-
-      setModalVisible(false);
-      setSelectedIcon(null);
-      setItemName("");
-      setItemPlace("");
-      setItemNumber(0);
+      fetchItems();
+      reset();
 
       console.log("保存成功:", newItem);
     } catch (error) {
       console.error("保存エラー:", error);
     }
   };
+
+  const fetchItems = async () => {
+    try {
+      const storedItems = await AsyncStorage.getItem("items");
+      return storedItems ? JSON.parse("storedItems") : [];
+    } catch (error) {
+      console.log("データを取得できませんでした");
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
   return (
     <View style={[styles.container]}>
       <View>
