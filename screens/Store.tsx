@@ -28,6 +28,7 @@ const Store: React.FC = () => {
   const [itemName, setItemName] = useState("");
   const [itemPlace, setItemPlace] = useState("");
   const [itemNumber, setItemNumber] = useState(0);
+  const [items, setItems] = useState([]);
   const addNumber = () => {
     setItemNumber(itemNumber + 1);
     return itemNumber;
@@ -51,6 +52,15 @@ const Store: React.FC = () => {
       />
     </TouchableOpacity>
   );
+  const renderItem = ({ item }) => {
+    return (
+      <View>
+        <Image source={item.icon} />
+        <Text></Text>
+        <Text></Text>
+      </View>
+    );
+  };
   const reset = () => {
     setModalVisible(false);
     setSelectedIcon(null);
@@ -86,7 +96,8 @@ const Store: React.FC = () => {
   const fetchItems = async () => {
     try {
       const storedItems = await AsyncStorage.getItem("items");
-      return storedItems ? JSON.parse("storedItems") : [];
+      const parsedItems = storedItems ? JSON.parse(storedItems) : [];
+      setItems(parsedItems);
     } catch (error) {
       console.log("データを取得できませんでした");
       return [];
@@ -101,6 +112,11 @@ const Store: React.FC = () => {
       <View>
         <Text>a</Text>
       </View>
+      <FlatList
+        data={items}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
       <View style={[styles.addButtonPlace]}>
         <TouchableOpacity
           style={[styles.addButton]}
