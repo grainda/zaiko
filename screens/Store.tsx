@@ -54,10 +54,15 @@ const Store: React.FC = () => {
   );
   const renderItem = ({ item }) => {
     return (
-      <View>
-        <Image source={item.icon} />
-        <Text></Text>
-        <Text></Text>
+      <View style={styles.storeContainer}>
+        <Text style={[styles.storeText]}>{item.name}</Text>
+        <TouchableOpacity onPress={() => removeItems(item.id)}>
+          <Text>-</Text>
+        </TouchableOpacity>
+        <Image source={item.icon} style={styles.storeImage} />
+
+        <Text style={styles.storeText}>場所：{item.place}</Text>
+        <Text style={styles.storeText}>在庫：{item.number}</Text>
       </View>
     );
   };
@@ -104,18 +109,26 @@ const Store: React.FC = () => {
     }
   };
 
+  const removeItems = async (key) => {
+    try {
+      await AsyncStorage.removeItem(key);
+      console.log(`${key} が削除されました`);
+    } catch (error) {
+      console.error("削除エラー:", error);
+    }
+    fetchItems();
+  };
+
   useEffect(() => {
     fetchItems();
   }, []);
   return (
     <View style={[styles.container]}>
-      <View>
-        <Text>a</Text>
-      </View>
       <FlatList
         data={items}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        numColumns={2}
       />
       <View style={[styles.addButtonPlace]}>
         <TouchableOpacity
@@ -209,6 +222,27 @@ const Store: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  storeImage: {
+    width: 150,
+    height: 150,
+    shadowColor: "#000",
+  },
+  storeContainer: {
+    padding: 10,
+    margin: 10,
+    borderWidth: 2,
+    borderRadius: 5,
+    borderColor: "#1da1f2",
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  storeText: {
+    color: "#1DA1F2",
   },
   addButtonPlace: {
     alignItems: "flex-end",
