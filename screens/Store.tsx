@@ -109,10 +109,14 @@ const Store: React.FC = () => {
     }
   };
 
-  const removeItems = async (key) => {
+  const removeItems = async (id) => {
     try {
-      await AsyncStorage.removeItem(key);
-      console.log(`${key} が削除されました`);
+      const storedItems = await AsyncStorage.getItem("items");
+      let items = storedItems ? JSON.parse(storedItems) : [];
+      items = items.filter((item) => item.id !== id);
+      await AsyncStorage.setItem("items", JSON.stringify(items));
+      fetchItems();
+      console.log("${id} が削除されました");
     } catch (error) {
       console.error("削除エラー:", error);
     }
