@@ -8,6 +8,7 @@ import {
   Image,
   FlatList,
   TextInput,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const icons = [
@@ -116,11 +117,23 @@ const Store: React.FC = () => {
       items = items.filter((item) => item.id !== id);
       await AsyncStorage.setItem("items", JSON.stringify(items));
       fetchItems();
-      console.log("${id} が削除されました");
+      console.log("'${id}' が削除されました");
     } catch (error) {
       console.error("削除エラー:", error);
     }
     fetchItems();
+  };
+
+  const removeCheck = () => {
+    Alert.alert("確認", "削除しますか", [
+      {
+        text: "いいえ",
+        onPress: () => console.log,
+      },
+      {
+        text: "ｓ",
+      },
+    ]);
   };
 
   useEffect(() => {
