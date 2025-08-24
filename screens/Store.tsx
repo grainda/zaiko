@@ -75,6 +75,13 @@ const Store: React.FC = () => {
     setItemNumber(0);
   };
   const saveItem = async () => {
+    if (!itemName.trim()) {
+      Alert.alert("商品名は必須です", "商品名を入力してください", {
+        text: "OK",
+        style: "calcel",
+      });
+      return;
+    }
     try {
       const newItem = {
         id: Date.now().toString(),
@@ -111,27 +118,26 @@ const Store: React.FC = () => {
   };
 
   const removeItems = async (id) => {
-    try {
-      const storedItems = await AsyncStorage.getItem("items");
-      let items = storedItems ? JSON.parse(storedItems) : [];
-      items = items.filter((item) => item.id !== id);
-      await AsyncStorage.setItem("items", JSON.stringify(items));
-      fetchItems();
-      console.log("'${id}' が削除されました");
-    } catch (error) {
-      console.error("削除エラー:", error);
-    }
-    fetchItems();
-  };
-
-  const removeCheck = () => {
-    Alert.alert("確認", "削除しますか", [
+    Alert.alert("アイテムの削除", "このアイテムを削除しますか？", [
       {
         text: "いいえ",
-        onPress: () => console.log,
+        style: "cancel",
       },
       {
-        text: "ｓ",
+        text: "はい",
+        onPress: async () => {
+          try {
+            const storedItems = await AsyncStorage.getItem("items");
+            let items = storedItems ? JSON.parse(storedItems) : [];
+            items = items.filter((item) => item.id !== id);
+            await AsyncStorage.setItem("items", JSON.stringify(items));
+            fetchItems();
+            console.log("{item.name} が削除されました");
+          } catch (error) {
+            console.error("削除エラー:", error);
+          }
+          fetchItems();
+        },
       },
     ]);
   };
