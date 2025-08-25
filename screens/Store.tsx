@@ -63,7 +63,16 @@ const Store: React.FC = () => {
         <Image source={item.icon} style={styles.storeImage} />
 
         <Text style={styles.storeText}>場所：{item.place}</Text>
-        <Text style={styles.storeText}>在庫：{item.number}</Text>
+        <View style={styles.flexdirection}>
+          <Text style={styles.storeText}>在庫：{item.number}</Text>
+
+          <TouchableOpacity onPress={() => updateItemNumber(item.id, "sub")}>
+            <Text>-</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => updateItemNumber(item.id, "add")}>
+            <Text>+</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -140,6 +149,32 @@ const Store: React.FC = () => {
         },
       },
     ]);
+  };
+
+  const updateItemNumber = async (id, operation) => {
+    try {
+      const storedItems = await AsyncStorage.getItem("items");
+      let items = storedItems ? JSON.parse(storedItems) : [];
+      const targetItem = items.findIndex((item) => item.id === id);
+      if (targetItem === -1) {
+        Alert.alert(
+          "アイテムが存在しません",
+          "指定されたアイテムを見つけられませんでした",
+          { text: "OK", style: "cancel" }
+        );
+        return;
+      }
+      if (operation === "sub" && items[targetItem].number === 0) {
+        return;
+      }
+      items[targetItem].number =
+        (items[targetItem].number || 0) + (operation === "add" ? 1 : -1);
+      await AsyncStorage.setItem("items", JSON.stringify(items));
+      console.log("在庫を更新");
+      fetchItems();
+    } catch (error) {
+      console.error("在庫数を更新できませんでした");
+    }
   };
 
   useEffect(() => {
@@ -243,6 +278,9 @@ const Store: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  flexdirection: {
+    flexDirection: "row",
+  },
   container: {
     flex: 1,
   },

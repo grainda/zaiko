@@ -4,9 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 const List: React.FC = () => {
   return (
     <View>
-      <View>
-        <Text>a</Text>
-      </View>
+      <View></View>
       <View></View>
     </View>
   );
