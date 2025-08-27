@@ -56,22 +56,32 @@ const Store: React.FC = () => {
   const renderItem = ({ item }) => {
     return (
       <View style={styles.storeContainer}>
-        <Text style={[styles.storeText]}>{item.name}</Text>
-        <TouchableOpacity onPress={() => removeItems(item.id)}>
-          <Text>-</Text>
+        <TouchableOpacity
+          onPress={() => removeItems(item.id)}
+          style={styles.storeRemoveButton}
+        >
+          <Text style={styles.storeButtonText}>-</Text>
         </TouchableOpacity>
-        <Image source={item.icon} style={styles.storeImage} />
+        <TouchableOpacity
+          onPress={() => updateItemNumber(item.id, "sub")}
+          style={styles.storeSButton}
+        >
+          <Text style={styles.storeButtonText}>-</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => updateItemNumber(item.id, "add")}
+          style={styles.storePButton}
+        >
+          <Text style={styles.storeButtonText}>+</Text>
+        </TouchableOpacity>
 
+        <View style={styles.flexdirection}>
+          <Text style={[styles.storeText]}>・{item.name}</Text>
+        </View>
+        <Image source={item.icon} style={styles.storeImage} />
         <Text style={styles.storeText}>場所：{item.place}</Text>
         <View style={styles.flexdirection}>
           <Text style={styles.storeText}>在庫：{item.number}</Text>
-
-          <TouchableOpacity onPress={() => updateItemNumber(item.id, "sub")}>
-            <Text>-</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateItemNumber(item.id, "add")}>
-            <Text>+</Text>
-          </TouchableOpacity>
         </View>
       </View>
     );
@@ -301,9 +311,52 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    position: "relative",
   },
   storeText: {
     color: "#1DA1F2",
+  },
+  storePButton: {
+    width: 18,
+    height: 18,
+    backgroundColor: "#1DA1F2",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 10,
+    position: "absolute",
+    bottom: 10,
+    right: 60,
+  },
+  storeSButton: {
+    width: 18,
+    height: 18,
+    backgroundColor: "#1DA1F2",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 10,
+    position: "absolute",
+    bottom: 10,
+    right: 20,
+  },
+  storeRemoveButton: {
+    width: 18,
+    height: 18,
+    backgroundColor: "#cb0b35ff",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 70,
+    position: "absolute",
+    top: 7,
+    right: 7,
+  },
+  storeButtonText: {
+    color: "#fff",
+    fontSize: 20,
+    textAlign: "center",
+    lineHeight: 20,
   },
   addButtonPlace: {
     alignItems: "flex-end",
