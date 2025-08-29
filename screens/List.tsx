@@ -5,6 +5,7 @@ const List: React.FC = () => {
   return (
     <View>
       <View></View>
+      <Text>a</Text>
       <View></View>
     </View>
   );
