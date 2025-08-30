@@ -5,7 +5,7 @@ const List: React.FC = () => {
   return (
     <View>
       <View></View>
-      <Text>a</Text>
+      <Text>・買い物リスト</Text>
       <View></View>
     </View>
   );
