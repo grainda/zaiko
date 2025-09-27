@@ -5,7 +5,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import List from "./screens/List";
 import Store from "./screens/Store";
-import { TabBarIndicator } from "react-native-tab-view";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -20,10 +19,10 @@ const App: React.FC = () => {
           swipeEnabled: true,
           tabBarIcon: ({ color }: { color: string }) => {
             let iconName: string;
-            if (route.name === "Home") {
-              iconName = "home";
+            if (route.name === "Store") {
+              iconName = "archive";
             } else {
-              iconName = "user";
+              iconName = "file-text";
             }
             return <Icon name={iconName} size={24} color={color} />;
           },

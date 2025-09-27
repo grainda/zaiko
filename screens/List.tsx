@@ -37,7 +37,10 @@ const List: React.FC = () => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
+      <View>
+        <Text>・在庫0</Text>
+      </View>
       <FlatList
         data={listItem}
         renderItem={renderList}
@@ -50,8 +53,7 @@ const List: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 20,
   },
 });
 
