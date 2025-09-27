@@ -9,6 +9,7 @@ import {
   FlatList,
   TextInput,
   Alert,
+  ListRenderItemInfo,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { saveItem, fetchItems, removeItems } from "../itemManager";
@@ -30,7 +31,7 @@ const Store: React.FC = () => {
   const [itemName, setItemName] = useState("");
   const [itemPlace, setItemPlace] = useState("");
   const [itemNumber, setItemNumber] = useState(0);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<Item[]>([]);
   const addNumber = () => {
     setItemNumber(itemNumber + 1);
     return itemNumber;
@@ -43,7 +44,20 @@ const Store: React.FC = () => {
     }
     return itemNumber;
   };
-  const renderIcon = ({ item }) => (
+
+  interface Icon {
+    id: string;
+    source: any;
+  }
+  interface Item {
+    id: string;
+    icon: any;
+    name: string;
+    place: string;
+    number: number;
+  }
+
+  const renderIcon = ({ item }: ListRenderItemInfo<Icon>) => (
     <TouchableOpacity onPress={() => setSelectedIcon(item.source)}>
       <Image
         source={item.source}
@@ -54,7 +68,7 @@ const Store: React.FC = () => {
       />
     </TouchableOpacity>
   );
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: ListRenderItemInfo<Item>) => {
     return (
       <View style={styles.storeContainer}>
         <TouchableOpacity
@@ -112,7 +126,7 @@ const Store: React.FC = () => {
     setItems(loadedItems);
   };
 
-  const handleRemoveItems = async (id) => {
+  const handleRemoveItems = async (id: string) => {
     Alert.alert("アイテムの削除", "このアイテムを削除しますか？", [
       {
         text: "いいえ",
@@ -128,10 +142,10 @@ const Store: React.FC = () => {
     ]);
   };
 
-  const updateItemNumber = async (id, operation) => {
+  const updateItemNumber = async (id: string, operation: string) => {
     try {
       const storedItems = await AsyncStorage.getItem("items");
-      let items = storedItems ? JSON.parse(storedItems) : [];
+      let items: Item[] = storedItems ? JSON.parse(storedItems) : [];
       const targetItem = items.findIndex((item) => item.id === id);
       if (targetItem === -1) {
         Alert.alert(
@@ -148,7 +162,7 @@ const Store: React.FC = () => {
         (items[targetItem].number || 0) + (operation === "add" ? 1 : -1);
       await AsyncStorage.setItem("items", JSON.stringify(items));
       console.log("在庫を更新");
-      fetchItems();
+      loadItems();
     } catch (error) {
       console.error("在庫数を更新できませんでした");
     }
@@ -161,8 +175,8 @@ const Store: React.FC = () => {
 
   return (
     <View style={[styles.container]}>
-      <FlatList
-        data={items.filter((item) => item && item.id)}
+      <FlatList<Item>
+        data={items}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         numColumns={2}

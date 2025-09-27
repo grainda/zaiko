@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert } from "react-native";
 
 export async function saveItem(newItem) {
   try {
+    console.log(newItem);
     const storedItems = await AsyncStorage.getItem("items");
     const items = storedItems ? JSON.parse(storedItems) : [];
 

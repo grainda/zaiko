@@ -1,25 +1,49 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-
+import { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  ListRenderItemInfo,
+} from "react-native";
+import { fetchItems } from "../itemManager";
 const List: React.FC = () => {
-  // const listItems =async () => {
-  //   const storedItems = await AsyncStorage.getItem("items");
-  //   const parsedItems = storedItems ? JSON.parse(storedItems) : [];
-  //   const listItem = parsedItems.filter(listIn => itemNumber =< 1)
-  // };
+  const [listItem, setListItem] = useState<Item[]>([]);
+  interface Item {
+    id: string;
+    icon: any;
+    name: string;
+    place: string;
+    number: number;
+  }
+  const filterItems = async () => {
+    const allItems = await fetchItems();
+    const filtered = allItems.filter((item) => item.number == 0);
+    setListItem(filtered);
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      filterItems();
+    }, [])
+  );
+  const renderList = ({ item }: ListRenderItemInfo<Item>) => {
+    return (
+      <View>
+        <Text>{item.name}</Text>
+      </View>
+    );
+  };
 
   return (
     <View>
-      {/* <FlatList
-              data={items}
-              renderItem={renderList}
-              keyExtractor={(item) => item.id}
-              numColumns={2}
-            /> */}
-      <View>
-        <Text>・買い物リスト</Text>
-      </View>
+      <FlatList
+        data={listItem}
+        renderItem={renderList}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+      />
     </View>
   );
 };
